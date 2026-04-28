@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualizador 3D Interactivo - Alan Cota</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.min.js"></script>
+    <style>
+        body { margin: 0; padding: 0; overflow: hidden; background-color: #1a1a1a; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+<script>
+/**
+ * PROYECTO FINAL UNIDAD 3 - GRAFICACIÓN 3D
+ * Alumno: Alan Daniel Cota Estrada
+ * Conceptos: WEBGL, Transformaciones, Interacción, Animación.
+ */
+
+let angleX = 0;
+let angleY = 0;
+let scaleVal = 1;
+let autoRotate = true;
+
+function setup() {
+    // Activación del motor 3D (WEBGL)
+    createCanvas(windowWidth, windowHeight, WEBGL);
+}
+
+function draw() {
+    background(30);
+    
+    // 1. INTERACCIÓN: Control de cámara con el mouse
+    orbitControl(); 
+    
+    // 2. ILUMINACIÓN: Para dar realismo a los objetos
+    ambientLight(100);
+    pointLight(255, 255, 255, 200, -200, 300);
+
+    // 3. TRANSFORMACIÓN: Rotación Automática
+    if (autoRotate) {
+        angleX += 0.01;
+        angleY += 0.01;
+    }
+
+    // --- OBJETO 1: CUBO CENTRAL (TRANSFORMACIONES) ---
+    push();
+    rotateX(angleX);
+    rotateY(angleY);
+    scale(scaleVal);
+    stroke(0, 255, 200);
+    fill(0, 150, 255, 150);
+    box(150); // Objeto tridimensional
+    pop();
+
+    // --- OBJETO 2: ESFERA SATÉLITE (TRASLACIÓN Y ÓRBITA) ---
+    push();
+    rotateY(-angleY * 2); // Órbita inversa
+    translate(250, 0, 0); // Traslación en el eje X
+    noStroke();
+    fill(255, 100, 100);
+    sphere(40);
+    pop();
+
+    // --- OBJETO 3: TOROIDE (ROTACIÓN EN Z) ---
+    push();
+    translate(0, 200, -100);
+    rotateZ(frameCount * 0.02);
+    fill(200, 200, 0);
+    torus(60, 20);
+    pop();
+}
+
+// 4. INTERACCIÓN CON TECLADO
+function keyPressed() {
+    if (key === ' ') autoRotate = !autoRotate; // Espacio: Pausa rotación
+    if (keyCode === UP_ARROW) scaleVal += 0.1; // Flecha arriba: Escalar +
+    if (keyCode === DOWN_ARROW) scaleVal -= 0.1; // Flecha abajo: Escalar -
+}
+
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+</script>
+</body>
+</html>
