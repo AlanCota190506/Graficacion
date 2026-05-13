@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Unidad 4: Iluminación y Sombreado - Cota Estrada Alan Daniel</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.4.1/p5.min.js"></script>
+    <style> 
+        body { margin: 0; background: #111; overflow: hidden; } 
+    </style>
+</head>
+<body>
+<script>
+/**
+ * PROYECTO UNIDAD 4 - MÉTODOS NUMÉRICOS
+ * Alumno: Alan Daniel Cota Estrada
+ * Temas: Iluminación Ambiental, Direccional, Puntual y Materiales.
+ */
+
+let angulo = 0;
+
+function setup() {
+    // Creamos el lienzo en modo WEBGL para permitir gráficos 3D
+    createCanvas(windowWidth, windowHeight, WEBGL);
+}
+
+function draw() {
+    background(20); // Fondo oscuro para resaltar la iluminación
+    
+    // Habilita el control de cámara con el mouse (Capítulo 1.18)
+    orbitControl(); 
+
+    // --- CONFIGURACIÓN DE ILUMINACIÓN (Capítulos 3 y 4) ---
+    
+    // 1. Luz Ambiental (Cap. 4.2): Ilumina todas las caras por igual
+    ambientLight(50); 
+    
+    // 2. Luz Direccional (Cap. 3.7): Luz infinita en una dirección (como el sol)
+    directionalLight(255, 255, 255, 1, 1, -1);
+    
+    // 3. Luz Puntual Interactiva (Cap. 3.10): La luz sigue la posición del mouse
+    // Esto demuestra cómo la luz varía según la posición (Desafío 1)
+    let locX = mouseX - width / 2;
+    let locY = mouseY - height / 2;
+    pointLight(255, 255, 255, locX, locY, 200);
+
+    angulo += 0.01;
+
+    // --- OBJETO 1: CUBO CON MATERIAL NORMAL (Capítulo 1.14) ---
+    // Colorea las caras según su orientación (vectores normales)
+    push();
+    translate(-250, 0, 0);
+    rotateX(angulo);
+    rotateY(angulo);
+    normalMaterial(); 
+    box(120);
+    pop();
+
+    // --- OBJETO 2: ESFERA CON MATERIAL AMBIENTAL (Capítulo 4.2) ---
+    // Responde a la luz ambiental y difusa, ideal para superficies mate
+    push();
+    translate(0, 0, 0);
+    noStroke(); // Evita que se vean las líneas de la malla (Error común 3)
+    ambientMaterial(100, 150, 255); 
+    sphere(90);
+    pop();
+
+    // --- OBJETO 3: TOROIDE CON MATERIAL ESPECULAR (Capítulo 4.4) ---
+    // Simula superficies brillantes con reflejos concentrados
+    push();
+    translate(250, 0, 0);
+    rotateX(angulo * 0.5);
+    rotateY(angulo * 0.8);
+    specularMaterial(250, 200, 50); 
+    shininess(100); // Define qué tan concentrado es el brillo
+    torus(80, 25);
+    pop();
+}
+
+// Ajusta el tamaño del canvas si se cambia el tamaño de la ventana
+function windowResized() {
+    resizeCanvas(windowWidth, windowHeight);
+}
+</script>
+</body>
+</html>
